@@ -61,7 +61,7 @@ class App < Sinatra::Base
 
   get('/profile') do
     # binding.pry
-    TWIT_CLIENT.user("Psweetpotato")
+    TWIT_CLIENT.update("Test : I'm tweeting with the twitter gem")
     render(:erb, :profile)
   end
 
