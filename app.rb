@@ -2,7 +2,9 @@ require 'sinatra/base'
 require 'securerandom'
 require 'httparty'
 require 'twitter'
+require 'json'
 require 'pry'
+
 
 class App < Sinatra::Base
 
@@ -64,12 +66,17 @@ class App < Sinatra::Base
   end
 
   get('/feeds') do
-    @obsession = params[:obsession]
+    @obsession = params[:obsession].capitalize
     #### TIMES ######
     @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
     @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
-    response = HTTParty.get("#{@times_url}")
-    binding.pry
+    times_response = HTTParty.get("#{@times_url}").to_json
+    @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
+    @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
+    @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
+# binding.pry
+    @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
+
     ### TWITTER ####
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
@@ -78,6 +85,11 @@ class App < Sinatra::Base
         @tweets.push("#{@name} says: '#{@text}'")
       end
     render(:erb, :feeds)
+  end
+
+  get('/@article_img_url') do
+    @article_img_url
+    render(:erb, :images)
   end
 
 end
