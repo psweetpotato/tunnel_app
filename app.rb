@@ -43,14 +43,14 @@ class App < Sinatra::Base
   #    Client Set Up     #
   ########################
 
-  @client = Twitter::REST::Client.new do |config|
+  TWIT_CLIENT = Twitter::REST::Client.new do |config|
     config.consumer_key    = TWIT_CONSUMER_KEY
     config.consumer_secret = TWIT_CONSUMER_SECRET
     config.access_token        = TWIT_ACCESS_TOKEN
     config.access_token_secret = TWIT_ACCESS_SECRET
   end
 
-binding.pry
+# binding.pry
   ########################
   # Routes
   ########################
@@ -60,7 +60,8 @@ binding.pry
   end
 
   get('/profile') do
-    @client.user("Psweetpotato")
+    # binding.pry
+    TWIT_CLIENT.user("Psweetpotato")
     render(:erb, :profile)
   end
 
