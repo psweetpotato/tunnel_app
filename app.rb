@@ -60,12 +60,18 @@ class App < Sinatra::Base
   end
 
   get('/profile') do
-    # binding.pry
-    TWIT_CLIENT.search("coffee", :result_type => "recent").take(2).collect do |tweet|
-        "#{tweet.user.screen_name}: #{tweet.text}"
-        binding.pry
-      end
     render(:erb, :profile)
+  end
+
+  get('/dashboard') do
+    @obsession = params[:obsession]
+          binding.pry
+      if @obsession == true
+        TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(2).collect do |tweet|
+        "#{tweet.user.screen_name}: #{tweet.text}"
+      end
+    end
+    render(:erb, :dashboard)
   end
 
 end
