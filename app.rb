@@ -65,13 +65,12 @@ class App < Sinatra::Base
 
   get('/dashboard') do
     @obsession = params[:obsession]
-    #   if @obsession == true
-    # binding.pry
-        TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(2).each do |tweet|
+      @tweets = []
+        TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
+        @tweets.push("#{@name} says: '#{@text}'")
       end
-    @tweet = "#{@name} says: '#{@text}'"
     render(:erb, :dashboard)
   end
 
