@@ -65,6 +65,12 @@ class App < Sinatra::Base
 
   get('/feeds') do
     @obsession = params[:obsession]
+    #### TIMES ######
+    @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+    @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
+    response = HTTParty.get("#{@times_url}")
+    binding.pry
+    ### TWITTER ####
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
