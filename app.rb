@@ -22,6 +22,17 @@ class App < Sinatra::Base
   end
 
   ########################
+  #       API KEYS       #
+  ########################
+
+  TWIT_API_KEY = "XsBbNJU6XDq3Bweq55fdwAczX"
+  TWIT_SECRET = "qYZxGoTtmcxCfdSEZ6bnX9cjFTaEBESGyPkZhXk3pngZ3GMnEM"
+  TWIT_OWNER_ID = "2699174835"
+  TWIT_ACCESS_TOKEN = "2699174835-4H3CChw71Aj99c442vSXjLxwgRmEQEkHNTQxMv9"
+  TWIT_ACCESS_TOKEN_SECRET = "EAhTmi6Cl7uxM2oTCYV1y5C80TeT1jB7vdn2J9NAFfg2q"
+
+
+  ########################
   # Routes
   ########################
 
