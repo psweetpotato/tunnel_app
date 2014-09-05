@@ -36,7 +36,7 @@ class App < Sinatra::Base
   TWIT_OWNER_ID = "2699174835"
   TWIT_ACCESS_TOKEN = "2699174835-4H3CChw71Aj99c442vSXjLxwgRmEQEkHNTQxMv9"
   TWIT_ACCESS_TOKEN_SECRET = "EAhTmi6Cl7uxM2oTCYV1y5C80TeT1jB7vdn2J9NAFfg2q"
-
+  WU_KEY = "611266f891f71333"
 
   ########################
   # Routes
