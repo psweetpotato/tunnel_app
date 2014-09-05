@@ -50,7 +50,7 @@ class App < Sinatra::Base
     config.access_token_secret = TWIT_ACCESS_SECRET
   end
 
-# binding.pry
+
   ########################
   # Routes
   ########################
@@ -61,7 +61,10 @@ class App < Sinatra::Base
 
   get('/profile') do
     # binding.pry
-    TWIT_CLIENT.update("Test : I'm tweeting with the twitter gem")
+    TWIT_CLIENT.search("coffee", :result_type => "recent").take(2).collect do |tweet|
+        "#{tweet.user.screen_name}: #{tweet.text}"
+        binding.pry
+      end
     render(:erb, :profile)
   end
 
