@@ -7,7 +7,7 @@ gem 'sinatra', '1.4.5'
 gem 'redis',  '3.1.0'
 gem 'httparty'
 gem 'twitter'
-
+gem 'instagram'
 # only used in development locally
 group :development do
   gem 'pry'

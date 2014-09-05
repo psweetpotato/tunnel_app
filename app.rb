@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'securerandom'
 require 'httparty'
+require 'instagram'
 require 'twitter'
 require 'json'
 require 'pry'
@@ -40,6 +41,8 @@ class App < Sinatra::Base
   TWIT_ACCESS_SECRET = "k2wzFh0LJy4zxaUPdPQhJ5mXkNrGug8jqBk7W2QgXv8CL"
   WU_KEY = "611266f891f71333"
   YORK_SEARCH_KEY = "89b8034ef450f0c931fa447d7dca0d8d:1:69766109"
+  INSTA_CLIENT_KEY= "64116f06f3ae4b13abb5a26e2fc84a43"
+  INSTA_CLIENT_SECRET = "507673b069c64e04a16f2d4078311e16"
 
   ########################
   #    Client Set Up     #
@@ -74,7 +77,6 @@ class App < Sinatra::Base
     @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
     @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
     @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
-# binding.pry
     @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
 
     ### TWITTER ####
@@ -92,4 +94,19 @@ class App < Sinatra::Base
     render(:erb, :images)
   end
 
+  get('/callback_uri') do
+    hub_challenge_param = "15f7d1a91c1f40f8a748fd134752feb3"
+  end
+
+  post('/insta') do
+    curl -F 'client_id=#{INSTA_CLIENT_KEY}' \
+     -F 'client_secret=#{INSTA_CLIENT_SECRET' \
+     -F 'object=tag' \
+     -F 'aspect=media' \
+     -F 'verify_token=myVerifyToken' \
+     -F 'object_id=#{@obsession}' \
+     -F 'callback_url=http://127.0.0.1:9292/callback_uri' \
+     https://api.instagram.com/v1/subscriptions/
+
+  end
 end
