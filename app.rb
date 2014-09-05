@@ -40,6 +40,15 @@ class App < Sinatra::Base
   YORK_SEARCH_KEY = "89b8034ef450f0c931fa447d7dca0d8d:1:69766109"
 
   ########################
+  #    Client Set Up     #
+  ########################
+
+  @client = Twitter::REST::Client.new do |config|
+    config.consumer_key    = "TWIT_CONSUMER_KEY"
+    config.consumer_secret = "TWIT_CONSUMER_SECRET"
+  end
+
+  ########################
   # Routes
   ########################
 
@@ -48,6 +57,7 @@ class App < Sinatra::Base
   end
 
   get('/profile') do
+    client.user("Psweetpotato")
     render(:erb, :profile)
   end
 
