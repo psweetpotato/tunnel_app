@@ -1,4 +1,8 @@
 require 'sinatra/base'
+require 'securerandom'
+require 'httparty'
+require 'twitter'
+require 'pry'
 
 class App < Sinatra::Base
 
@@ -10,6 +14,8 @@ class App < Sinatra::Base
     enable :logging
     enable :method_override
     enable :sessions
+    set :session_secret, 'super secret'
+
   end
 
   before do
