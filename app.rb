@@ -63,7 +63,7 @@ class App < Sinatra::Base
     render(:erb, :profile)
   end
 
-  get('/dashboard') do
+  get('/feeds') do
     @obsession = params[:obsession]
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
@@ -71,7 +71,7 @@ class App < Sinatra::Base
         @text = tweet.text
         @tweets.push("#{@name} says: '#{@text}'")
       end
-    render(:erb, :dashboard)
+    render(:erb, :feeds)
   end
 
 end
