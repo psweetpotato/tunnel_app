@@ -73,12 +73,15 @@ class App < Sinatra::Base
     #### TIMES ######
     @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
     @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
-    times_response = HTTParty.get("#{@times_url}").to_json
-    @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
-    @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
-    @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
-    @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
-
+    begin
+      times_response = HTTParty.get("#{@times_url}").to_json
+      @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
+      @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
+      @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
+      @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
+    rescue Exception => e
+      puts e.message
+    end
     ### TWITTER ####
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
@@ -89,24 +92,28 @@ class App < Sinatra::Base
     render(:erb, :feeds)
   end
 
-  get('/@article_img_url') do
-    @article_img_url
-    render(:erb, :images)
-  end
+    ######### INSTA #######
+    # CALLBACK_URL = "http://127.0.0.1:9292/callback_uri"
 
-  get('/callback_uri') do
-    hub_challenge_param = "15f7d1a91c1f40f8a748fd134752feb3"
-  end
+    # Instagram.configure do |config|
+    #   config.client_id = INSTA_CLIENT_KEY
+    #   config.client_secret = INSTA_CLIENT_SECRET
+    # end
 
-  post('/insta') do
-    curl -F 'client_id=#{INSTA_CLIENT_KEY}' \
-     -F 'client_secret=#{INSTA_CLIENT_SECRET' \
-     -F 'object=tag' \
-     -F 'aspect=media' \
-     -F 'verify_token=myVerifyToken' \
-     -F 'object_id=#{@obsession}' \
-     -F 'callback_url=http://127.0.0.1:9292/callback_uri' \
-     https://api.instagram.com/v1/subscriptions/
 
-  end
+  # get('/callback_uri') do
+  #   hub_challenge_param = "15f7d1a91c1f40f8a748fd134752feb3"
+  # end
+
+  # post('/insta') do
+  #   curl -F 'client_id=#{INSTA_CLIENT_KEY}' \
+  #    -F 'client_secret=#{INSTA_CLIENT_SECRET}' \
+  #    -F 'object=tag' \
+  #    -F 'aspect=media' \
+  #    -F 'verify_token=myVerifyToken' \
+  #    -F 'object_id=#{@obsession}' \
+  #    -F 'callback_url=http://127.0.0.1:9292/callback_uri' \
+  #    https://api.instagram.com/v1/subscriptions/
+
+  # end
 end
