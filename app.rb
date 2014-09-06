@@ -83,12 +83,11 @@ class App < Sinatra::Base
   end
 
   get('/feeds') do
-    @obsession = "coffee"
-    # params[:obsession].capitalize
+    @obsession = params[:obsession].capitalize
     # FIXME hardcoded until peristing data works
-    @twitter_toggle = params[:twitter_toggle]
-    @times_toggle = params[:times_toggle]
-    @graph_toggle = params[:graph_toggle]
+    @twitter_toggle = "on" #params[:twitter_toggle]
+    @times_toggle = "on" #params[:times_toggle]
+    @graph_toggle = "on" #params[:graph_toggle]
 
     #### TIMES ######
     if @times_toggle == "on"
