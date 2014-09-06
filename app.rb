@@ -68,16 +68,21 @@ class App < Sinatra::Base
     render(:erb, :profile)
   end
 
+  get('/profile/retry')do
+    @obscure = true
+    render(:erb, :profile)
+  end
+
   get('/profile/edit') do
     render(:erb, :edit)
   end
 
   get('/feeds') do
-    @obsession = "coffee" ##### FIXME hardcoded until peristing data works
-    # params[:obsession].capitalize
-    @twitter_toggle = params[:twitter_toggle]
-    @times_toggle = params[:times_toggle]
-    @graph_toggle = params[:graph_toggle]
+    @obsession = params[:obsession].capitalize
+    # "coffee" ##### FIXME hardcoded until peristing data works
+    @twitter_toggle = "on" #params[:twitter_toggle]
+    @times_toggle = "on" #params[:times_toggle]
+    @graph_toggle = "on" #params[:graph_toggle]
 
     #### TIMES ######
     if @times_toggle == "on"
@@ -89,8 +94,8 @@ class App < Sinatra::Base
         @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
         @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
         @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
-      rescue Exception => e
-        puts e.message
+      rescue
+        redirect to('/profile/retry')
       end
     else
     end

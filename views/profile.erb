@@ -1,10 +1,16 @@
-<h1>Hello World! This is the profile page!</h1>
+
+
+<% if @obscure %>
+<h1>Congratulations! You are too cool for school! (Your obsession is too obscure. Try again.) </h1>
+<% else %>
+<h1> Hello! </h1>
+<% end %>
 
 <section id="form">
-
   <form method="get" action="/feeds">
     <label for="obsession">What are you obsessed with?</label>
     <input type="text" name="obsession" id="obsession" />
     <input type="submit" />
   </form>
+
 </section>
