@@ -73,8 +73,7 @@ class App < Sinatra::Base
   end
 
   get('/feeds') do
-    #TODO build classes for each feed
-    @obsession = "coffee"
+    @obsession = "coffee" ##### FIXME hardcoded until peristing data works
     # params[:obsession].capitalize
     @twitter_toggle = params[:twitter_toggle]
     @times_toggle = params[:times_toggle]
