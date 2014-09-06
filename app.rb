@@ -93,7 +93,6 @@ class App < Sinatra::Base
         @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
         @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
         @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
-        @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
       rescue
         redirect to('/profile/retry')
       end
@@ -106,10 +105,15 @@ class App < Sinatra::Base
         @name = tweet.user.screen_name
         @text = tweet.text
         @tweets.push("#{@name} says: '#{@text}'")
-      end
+        end
     else
     end
     render(:erb, :feeds)
+  end
+
+  get('feeds/:id') do
+
+    render(:erb, :feed_id)
   end
 
     ######### INSTA #######
