@@ -68,8 +68,14 @@ class App < Sinatra::Base
     render(:erb, :profile)
   end
 
+  get('/profile/edit') do
+    render(:erb, :edit)
+  end
+
   get('/feeds') do
+    #TODO build classes for each feed
     @obsession = params[:obsession].capitalize
+
     #### TIMES ######
     @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
     @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
@@ -82,6 +88,7 @@ class App < Sinatra::Base
     rescue Exception => e
       puts e.message
     end
+
     ### TWITTER ####
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
