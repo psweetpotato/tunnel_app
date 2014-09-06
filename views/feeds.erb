@@ -1,4 +1,7 @@
+<a href="/profile/edit">Profile</a>
+
 <section id="twitter">
+  <% if @twitter_toggle == "on" %>
   <h1>Tweets Concerning <%= @obsession %> </h1>
   <ul>
     <li>  <%= @tweets[0] %> </li>
@@ -7,15 +10,20 @@
     <li>  <%= @tweets[3] %> </li>
     <li>  <%= @tweets[4] %> </li>
   </ul>
+  <% else %>
+  <% end %>
 </section>
 
 <section id="times">
+  <% if @times_toggle == "on" %>
   <h1>Relevant News Articles</h1>
   <p>
     <a href="<%= @times_article_url %>" ><%= @times_headline %></a>
      </br>
      <%= @times_snippet %>
   </p>
+  <% else %>
+  <% end %>
 </section>
 
 <section id="trending">

@@ -74,28 +74,37 @@ class App < Sinatra::Base
 
   get('/feeds') do
     #TODO build classes for each feed
-    @obsession = params[:obsession].capitalize
+    @obsession = "coffee"
+    # params[:obsession].capitalize
+    @twitter_toggle = params[:twitter_toggle]
+    @times_toggle = params[:times_toggle]
+    @graph_toggle = params[:graph_toggle]
 
     #### TIMES ######
-    @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-    @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
-    begin
-      times_response = HTTParty.get("#{@times_url}").to_json
-      @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
-      @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
-      @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
-      @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
-    rescue Exception => e
-      puts e.message
+    if @times_toggle == "on"
+      @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
+      @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
+      begin
+        times_response = HTTParty.get("#{@times_url}").to_json
+        @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
+        @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
+        @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
+        @article_img_url = JSON.parse(times_response)["response"]["docs"][0]["multimedia"][0]["url"]
+      rescue Exception => e
+        puts e.message
+      end
+    else
     end
-
     ### TWITTER ####
+    if @twitter_toggle == "on"
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
         @tweets.push("#{@name} says: '#{@text}'")
       end
+    else
+    end
     render(:erb, :feeds)
   end
 
