@@ -44,6 +44,8 @@ class App < Sinatra::Base
   INSTA_CLIENT_KEY= "64116f06f3ae4b13abb5a26e2fc84a43"
   INSTA_CLIENT_SECRET = "507673b069c64e04a16f2d4078311e16"
 
+
+
   ########################
   #    Client Set Up     #
   ########################
@@ -59,12 +61,19 @@ class App < Sinatra::Base
   ########################
   # Routes
   ########################
+  before('/profile') do
+    params = {:twitter_toggle => "true",
+              :times_toggle => "true",
+              :graph_toggle => "true",
+            }
+  end
 
   get('/') do
     render(:erb, :index)
   end
 
   get('/profile') do
+
     render(:erb, :profile)
   end
 
@@ -85,12 +94,8 @@ class App < Sinatra::Base
   get('/feeds') do
     @obsession = params[:obsession].capitalize
     # FIXME hardcoded until peristing data works
-    @twitter_toggle = "on" #params[:twitter_toggle]
-    @times_toggle = "on" #params[:times_toggle]
-    @graph_toggle = "on" #params[:graph_toggle]
-
-    #### TIMES ######
-    if @times_toggle == "on"
+    #### TIMES #####
+    if @times_toggle == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
       @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
       begin
@@ -101,24 +106,31 @@ class App < Sinatra::Base
       rescue
         redirect to('/profile/retry')
       end
-    else
     end
     ### TWITTER ####
-    if @twitter_toggle == "on"
+    if @twitter_toggle == "true"
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
         @tweets.push("#{@name} says: '#{@text}'")
         end
-    else
     end
     render(:erb, :feeds)
   end
 
-  get('feeds') do
+  get('/feeds/:id') do
     @feed_index = params[:id]
     render(:erb, :feed_id)
+  end
+
+
+  post('/feeds') do
+    @twitter_toggle = params[:twitter_toggle]
+    @times_toggle = params[:times_toggle]
+    @graph_toggle = params[:graph_toggle]
+    binding.pry
+    redirect to('/feeds')
   end
 
     ######### INSTA #######
