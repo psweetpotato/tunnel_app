@@ -111,9 +111,9 @@ class App < Sinatra::Base
       @times_url = "#{@base_url}fq=#{session[:obsession]}&api-key=#{YORK_SEARCH_KEY}"
       begin
         times_response = HTTParty.get("#{@times_url}").to_json
-        @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
-        @times_snippet = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
-        @times_headline = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
+        session[:times_article_url] = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
+        session[:times_snippet] = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
+        session[:times_headline] = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
       rescue
         redirect to('/profile/retry')
       end
@@ -128,11 +128,11 @@ class App < Sinatra::Base
         end
     end
     if session[:weather_toggle] == "true"
-      @raw_url = 'http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{@state}/#{@city}.json'
-      @encoded_url = URI.encode(@weather_url)
-      @weather_url = URI.parse(@encoded_url)
+      raw_url = "http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{session[:state]}/#{session[:city]}.json"
+      encoded_url = URI.encode(raw_url)
+      @weather_url = URI.parse(encoded_url)
       HTTParty.get(@weather_url) do |f|
-        json_string = f.read
+        json_string = f.read.to_json
         parsed_json = JSON.parse(json_string)
         location = parsed_json['state']['city']
         temp_f = parsed_json['current_observation']['temp_f']
@@ -179,8 +179,8 @@ class App < Sinatra::Base
       session[:weather_toggle] = "true"
     end
 
-    @city = params[:city]
-    @state = params[:state]
+    session[:city] = params[:city]
+    session[:state] = params[:state]
     redirect to('/feeds')
   end
 
