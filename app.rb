@@ -3,6 +3,7 @@ require 'securerandom'
 require 'httparty'
 require 'instagram'
 require 'twitter'
+require 'redis'
 require 'json'
 require 'pry'
 
@@ -18,6 +19,10 @@ class App < Sinatra::Base
     enable :method_override
     enable :sessions
     set :session_secret, 'super secret'
+    uri = URI.parse(ENV["REDISTOGO_URL"])
+    $redis = Redis.new({:host => uri.host,
+                        :port => uri.port,
+                        :password => uri.password})
 
   end
 
@@ -57,7 +62,6 @@ class App < Sinatra::Base
     config.access_token_secret = TWIT_ACCESS_SECRET
   end
 
-
   ########################
   # Routes
   ########################
@@ -66,9 +70,9 @@ class App < Sinatra::Base
               :times_toggle => "true",
               :graph_toggle => "true",
             }
-    $twitter_toggle = params[:twitter_toggle]
-    $times_toggle = params[:times_toggle]
-    $graph_toggle = params[:graph_toggle]
+    TWITTER_TOGGLE = params[:twitter_toggle]
+    TIMES_TOGGLE = params[:times_toggle]
+    GRAPH_TOGGLE = params[:graph_toggle]
   end
 
   get('/') do
@@ -89,7 +93,7 @@ class App < Sinatra::Base
     render(:erb, :edit)
   end
 
-  get('/feeds/:id') do
+  get('/feeds/id') do
     @feed_index = params[:id]
     render(:erb, :feed_id)
   end
@@ -99,7 +103,7 @@ class App < Sinatra::Base
     #params[:obsession].capitalize
     # FIXME hardcoded until peristing data works
     #### TIMES #####
-    if $times_toggle == "true"
+    if TIMES_TOGGLE == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
       @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
       begin
@@ -112,7 +116,7 @@ class App < Sinatra::Base
       end
     end
     ### TWITTER ####
-    if $twitter_toggle == "true"
+    if TWITTER_TOGGLE == "true"
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
@@ -123,13 +127,40 @@ class App < Sinatra::Base
     render(:erb, :feeds)
   end
 
-  get('/feeds/:id') do
-    @feed_index = params[:id]
-    render(:erb, :feed_id)
+  get('/feeds/twitter') do
+    @obsession = "test"
+    #params[:obsession].capitalize
+    # FIXME hardcoded until peristing data works
+    render(:erb, :'/Feeds/feed_twitter')
   end
 
+  get('/feeds/times') do
+    render(:erb, :'/Feeds/feed_times')
+  end
 
+  get('/feeds/graph') do
+    render(:erb, :'/Feeds/feed_graph')
+  end
+
+###############
+#    POST     #
+###############
   post('/feeds') do
+    if params[:twitter_toggle] == nil
+      TWITTER_TOGGLE = false
+    else
+      TWITTER_TOGGLE = "true"
+    end
+    if params[:times_toggle] == nil
+      TIMES_TOGGLE = false
+    else
+      TIMES_TOGGLE = "true"
+    end
+    if params[:graph_toggle] == nil
+      GRAPH_TOGGLE = false
+    else
+      GRAPH_TOGGLE = "true"
+    end
     redirect to('/feeds')
   end
 

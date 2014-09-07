@@ -18,7 +18,7 @@ describe "Feeds Page" do
 
   it 'has a link to the twitter show page' do
     find_link('Twitter').click
-    expect(page).to have_content('Twitter')
+    expect(page).to have_content('Tweets')
   end
 
   it 'has a link to the times show page' do
@@ -30,6 +30,11 @@ describe "Feeds Page" do
     find_link('Google Trending').click
     expect(page).to have_content('Trending')
   end
+
+  it 'shows information relevant to the keyword entered' do
+    expect(page).to have_content('test')
+  end
+
 
 
 end

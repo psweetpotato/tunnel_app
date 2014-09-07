@@ -6,7 +6,7 @@
 #   end
 
 #   it 'prompts user for an obsession' do
-#     expect(page).to have_content("obsessed")
+#     expect(page).to have_content("obsession")
 #   end
 
 #   it 'redirects to the dashboard' do
