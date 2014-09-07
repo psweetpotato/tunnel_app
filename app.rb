@@ -102,7 +102,7 @@ class App < Sinatra::Base
 
   get('/feeds') do
     if params[:obsession]
-    session[:obsession] ||= params[:obsession].capitalize
+    session[:obsession] = params[:obsession].capitalize
     end
     # FIXME hardcoded until peristing data works
     #### TIMES #####
