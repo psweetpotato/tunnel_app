@@ -128,15 +128,13 @@ class App < Sinatra::Base
         end
     end
     if session[:weather_toggle] == "true"
-      raw_url = "http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{session[:state]}/#{session[:city]}.json"
-      encoded_url = URI.encode(raw_url)
-      @weather_url = URI.parse(encoded_url)
-      HTTParty.get(@weather_url) do |f|
-        json_string = f.read.to_json
-        parsed_json = JSON.parse(json_string)
-        location = parsed_json['state']['city']
-        temp_f = parsed_json['current_observation']['temp_f']
-        print "Current temperature in #{location} is: #{temp_f}\n"
+      @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{session[:state]}/#{session[:city]}.json")
+      URI.parse(@encoded_url)
+      open (@encoded_url) do |f|
+      weather_string = f.read
+      weather_parsed = JSON.parse(weather_string)
+      session[:location] = weather_parsed['current_observation']['display_location']['full']
+      session[:temp_f] = weather_parsed['current_observation']['temp_f']
       end
     end
     render(:erb, :'/Feeds/feeds')

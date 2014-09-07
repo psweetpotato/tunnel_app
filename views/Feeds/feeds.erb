@@ -39,12 +39,6 @@
 
 <section id="weather">
   <% if session[:weather_toggle] == "true" %>
-      <% open('@weather_url') do |f| %>
-       <% json_string = f.read %>
-        <% parsed_json = JSON.parse(json_string) %>
-        <% location = parsed_json['state']['city'] %>
-        <% temp_f = parsed_json['current_observation']['temp_f'] %>
-        Current temperature in <%= location %>is: <%= temp_f %>\n
+        <p>Current temperature in <%= session[:location] %> is: <%= session[:temp_f] %> </p>
     <% end %>
-  <% end %>
 </section>
