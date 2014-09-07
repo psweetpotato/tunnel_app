@@ -66,6 +66,9 @@ class App < Sinatra::Base
               :times_toggle => "true",
               :graph_toggle => "true",
             }
+    $twitter_toggle = params[:twitter_toggle]
+    $times_toggle = params[:times_toggle]
+    $graph_toggle = params[:graph_toggle]
   end
 
   get('/') do
@@ -92,10 +95,11 @@ class App < Sinatra::Base
   end
 
   get('/feeds') do
-    @obsession = params[:obsession].capitalize
+    @obsession = "test"
+    #params[:obsession].capitalize
     # FIXME hardcoded until peristing data works
     #### TIMES #####
-    if @times_toggle == "true"
+    if $times_toggle == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
       @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
       begin
@@ -108,7 +112,7 @@ class App < Sinatra::Base
       end
     end
     ### TWITTER ####
-    if @twitter_toggle == "true"
+    if $twitter_toggle == "true"
       @tweets = []
         TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
@@ -126,10 +130,6 @@ class App < Sinatra::Base
 
 
   post('/feeds') do
-    @twitter_toggle = params[:twitter_toggle]
-    @times_toggle = params[:times_toggle]
-    @graph_toggle = params[:graph_toggle]
-    binding.pry
     redirect to('/feeds')
   end
 

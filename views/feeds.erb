@@ -1,7 +1,7 @@
 <a href="/profile/edit">Profile</a>
 
 <section id="twitter">
-  <% if @twitter_toggle == "true" %>
+  <% if $twitter_toggle == "true" %>
   <h1>Tweets Concerning <%= @obsession %> </h1>
   <ul>
     <li>  <%= @tweets[0] %> </li>
@@ -11,13 +11,12 @@
     <li>  <%= @tweets[4] %> </li>
   </ul>
   <a href="<%= '/feeds/0' %>" >Twitter</a>
-  <% else %>
   <% end %>
 
 </section>
 
 <section id="times">
-  <% if @times_toggle == "true" %>
+  <% if $times_toggle == "true" %>
   <h1>Relevant News Articles</h1>
   <p>
     <a href="<%= @times_article_url %>" ><%= @times_headline %></a>
@@ -25,18 +24,16 @@
      <%= @times_snippet %>
      <a href="<%= '/feeds/1' %>" >The Times</a>
   </p>
-  <% else %>
   <% end %>
 </section>
 
 <section id="trending">
-  <% if @graph_toggle == "true" %>
+  <% if $graph_toggle == "true" %>
   <h1> <%= @obsession %> Trending </h1>
     <!-- displays obsession graph -->
     <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=<%= @obsession %>&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>
   </br>
     <a href="<%= '/feeds/2' %>" >Google Trending</a>
-    <% else %>
     <% end %>
 
 </section>
