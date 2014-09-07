@@ -3,9 +3,11 @@ require 'securerandom'
 require 'httparty'
 require 'instagram'
 require 'twitter'
+require 'open-uri'
 require 'redis'
 require 'json'
 require 'pry'
+require 'uri'
 
 
 class App < Sinatra::Base
@@ -23,7 +25,6 @@ class App < Sinatra::Base
     $redis = Redis.new({:host => uri.host,
                         :port => uri.port,
                         :password => uri.password})
-
   end
 
   before do
@@ -44,7 +45,7 @@ class App < Sinatra::Base
   TWIT_OWNER_ID = "2699174835"
   TWIT_ACCESS_TOKEN = "2699174835-zejsRftMeSZnTL6MGMW4PvbMoWvuHNh0UeUvgws"
   TWIT_ACCESS_SECRET = "k2wzFh0LJy4zxaUPdPQhJ5mXkNrGug8jqBk7W2QgXv8CL"
-  WU_KEY = "611266f891f71333"
+  WU_KEY = ENV["4dd8a202d9e3383b"]
   YORK_SEARCH_KEY = "89b8034ef450f0c931fa447d7dca0d8d:1:69766109"
   INSTA_CLIENT_KEY= "64116f06f3ae4b13abb5a26e2fc84a43"
   INSTA_CLIENT_SECRET = "507673b069c64e04a16f2d4078311e16"
@@ -69,10 +70,12 @@ class App < Sinatra::Base
     params = {:twitter_toggle => "true",
               :times_toggle => "true",
               :graph_toggle => "true",
+              :weather_toggle => false
             }
-    TWITTER_TOGGLE = params[:twitter_toggle]
-    TIMES_TOGGLE = params[:times_toggle]
-    GRAPH_TOGGLE = params[:graph_toggle]
+    session[:twitter_toggle] = params[:twitter_toggle]
+    session[:times_toggle] = params[:times_toggle]
+    session[:graph_toggle] = params[:graph_toggle]
+    session[:weather_toggle] = params[:weather_toggle]
   end
 
   get('/') do
@@ -80,7 +83,6 @@ class App < Sinatra::Base
   end
 
   get('/profile') do
-
     render(:erb, :profile)
   end
 
@@ -99,13 +101,14 @@ class App < Sinatra::Base
   end
 
   get('/feeds') do
-    @obsession = "test"
-    #params[:obsession].capitalize
+    if params[:obsession]
+    session[:obsession] ||= params[:obsession].capitalize
+    end
     # FIXME hardcoded until peristing data works
     #### TIMES #####
-    if TIMES_TOGGLE == "true"
+    if session[:times_toggle] == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-      @times_url = "#{@base_url}fq=#{@obsession}&api-key=#{YORK_SEARCH_KEY}"
+      @times_url = "#{@base_url}fq=#{session[:obsession]}&api-key=#{YORK_SEARCH_KEY}"
       begin
         times_response = HTTParty.get("#{@times_url}").to_json
         @times_article_url = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
@@ -116,21 +119,30 @@ class App < Sinatra::Base
       end
     end
     ### TWITTER ####
-    if TWITTER_TOGGLE == "true"
-      @tweets = []
-        TWIT_CLIENT.search("#{@obsession}", :result_type => "recent").take(5).each_with_index do |tweet, index|
+    if session[:twitter_toggle] == "true"
+      session[:tweets] = []
+        TWIT_CLIENT.search("#{session[:obsession]}", :result_type => "recent").take(5).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
-        @tweets.push("#{@name} says: '#{@text}'")
+        session[:tweets].push("#{@name} says: '#{@text}'")
         end
     end
-    render(:erb, :feeds)
+    if session[:weather_toggle] == "true"
+      @raw_url = 'http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{@state}/#{@city}.json'
+      @encoded_url = URI.encode(@weather_url)
+      @weather_url = URI.parse(@encoded_url)
+      HTTParty.get(@weather_url) do |f|
+        json_string = f.read
+        parsed_json = JSON.parse(json_string)
+        location = parsed_json['state']['city']
+        temp_f = parsed_json['current_observation']['temp_f']
+        print "Current temperature in #{location} is: #{temp_f}\n"
+      end
+    end
+    render(:erb, :'/Feeds/feeds')
   end
 
   get('/feeds/twitter') do
-    @obsession = "test"
-    #params[:obsession].capitalize
-    # FIXME hardcoded until peristing data works
     render(:erb, :'/Feeds/feed_twitter')
   end
 
@@ -147,20 +159,28 @@ class App < Sinatra::Base
 ###############
   post('/feeds') do
     if params[:twitter_toggle] == nil
-      TWITTER_TOGGLE = false
+      session[:twitter_toggle] = false
     else
-      TWITTER_TOGGLE = "true"
+      session[:twitter_toggle] = "true"
     end
     if params[:times_toggle] == nil
-      TIMES_TOGGLE = false
+      session[:times_toggle] = false
     else
-      TIMES_TOGGLE = "true"
+      session[:times_toggle] = "true"
     end
     if params[:graph_toggle] == nil
-      GRAPH_TOGGLE = false
+      session[:graph_toggle] = false
     else
-      GRAPH_TOGGLE = "true"
+      session[:graph_toggle] = "true"
     end
+    if params[:weather_toggle] == nil
+      session[:weather_toggle] = false
+    else
+      session[:weather_toggle] = "true"
+    end
+
+    @city = params[:city]
+    @state = params[:state]
     redirect to('/feeds')
   end
 

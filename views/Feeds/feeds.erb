@@ -1,14 +1,14 @@
 <a href="/profile/edit">Profile</a>
 
 <section id="twitter">
-  <% if TWITTER_TOGGLE == "true" %>
+  <% if session[:twitter_toggle] == "true" %>
   <h1>Tweets</h1>
   <ul>
-    <li>  <%= @tweets[0] %> </li>
-    <li>  <%= @tweets[1] %> </li>
-    <li>  <%= @tweets[2] %> </li>
-    <li>  <%= @tweets[3] %> </li>
-    <li>  <%= @tweets[4] %> </li>
+    <li>  <%= session[:tweets][0] %> </li>
+    <li>  <%= session[:tweets][1] %> </li>
+    <li>  <%= session[:tweets][2] %> </li>
+    <li>  <%= session[:tweets][3] %> </li>
+    <li>  <%= session[:tweets][4] %> </li>
   </ul>
   <a href='/feeds/twitter'>Twitter</a>
   <% end %>
@@ -16,7 +16,7 @@
 </section>
 
 <section id="times">
-  <% if TIMES_TOGGLE == "true" %>
+  <% if session[:times_toggle] == "true" %>
   <h1>Relevant News Articles</h1>
   <p>
     <a href="<%= @times_article_url %>" ><%= @times_headline %></a>
@@ -28,12 +28,23 @@
 </section>
 
 <section id="trending">
-  <% if GRAPH_TOGGLE == "true" %>
-  <h1> <%= @obsession %> Trending </h1>
+  <% if session[:graph_toggle] == "true" %>
+  <h1> <%= session[:obsession] %> Trending </h1>
     <!-- displays obsession graph -->
-    <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=<%= @obsession %>&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>
+    <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=<%= session[:obsession] %>&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>
   </br>
     <a href='/feeds/graph'>Google Trending</a>
     <% end %>
+</section>
 
+<section id="weather">
+  <% if session[:weather_toggle] == "true" %>
+      <% open('@weather_url') do |f| %>
+       <% json_string = f.read %>
+        <% parsed_json = JSON.parse(json_string) %>
+        <% location = parsed_json['state']['city'] %>
+        <% temp_f = parsed_json['current_observation']['temp_f'] %>
+        Current temperature in <%= location %>is: <%= temp_f %>\n
+    <% end %>
+  <% end %>
 </section>
