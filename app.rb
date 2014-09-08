@@ -66,17 +66,13 @@ class App < Sinatra::Base
   # Routes
   ########################
   before ('/profile') do
-    $redis.set(:feeds_hash, {
-                            :twitter_toggle => "true",
-                            :times_toggle => "true",
-                            :graph_toggle => "true",
-                            :weather_toggle => false,
-                            }).to_json
-
-      # @twitter_toggle = "true"
-      # @times_toggle = "true"
-      # @graph_toggle = "true"
-      # @weather_toggle = false
+    feeds_hash = {
+                  :twitter_toggle => "true",
+                  :times_toggle => "true",
+                  :graph_toggle => "true",
+                  :weather_toggle => false,
+                  }
+    $redis.set(:feeds_hash, feeds_hash.to_json)
   end
 
   get('/') do
@@ -109,7 +105,10 @@ class App < Sinatra::Base
   get('/feeds') do
     #### TIMES #####
     # binding.pry
-    if JSON.parse($redis.get(:feeds_hash)[:times_toggle]) == "true"
+    #FIXME
+    times_on_off = $redis.get(:feeds_hash[:times_toggle])
+    @times_toggle = JSON.parse(times_on_off)
+    if @times_toggle== "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
       @times_url = "#{@base_url}fq=headline.search:(#{$redis.get(:obsession)})&api-key=#{YORK_SEARCH_KEY}"
       begin
