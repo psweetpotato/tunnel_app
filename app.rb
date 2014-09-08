@@ -74,7 +74,7 @@ class App < Sinatra::Base
   end
 
   get('/') do
-    render(:erb, :index)
+    redirect to('/profile')
   end
 
   get('/profile') do
