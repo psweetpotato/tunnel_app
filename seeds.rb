@@ -1,3 +1,4 @@
+require 'redis'
 require 'json'
 require 'pry'
 require 'uri'
