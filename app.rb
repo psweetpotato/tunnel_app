@@ -66,10 +66,17 @@ class App < Sinatra::Base
   # Routes
   ########################
   before ('/profile') do
-      $redis.set[:twitter_toggle] = "true"
-      $redis.set[:times_toggle] = "true"
-      $redis.set[:graph_toggle] = "true"
-      $redis.set[:weather_toggle] = false
+    $redis.set(:feeds_hash, {
+                            :twitter_toggle => "true",
+                            :times_toggle => "true",
+                            :graph_toggle => "true",
+                            :weather_toggle => false,
+                            }).to_json
+
+      # @twitter_toggle = "true"
+      # @times_toggle = "true"
+      # @graph_toggle = "true"
+      # @weather_toggle = false
   end
 
   get('/') do
@@ -101,8 +108,8 @@ class App < Sinatra::Base
 
   get('/feeds') do
     #### TIMES #####
-    binding.pry
-    if  $redis.get(:times_toggle) == "true"
+    # binding.pry
+    if JSON.parse($redis.get(:feeds_hash)[:times_toggle]) == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
       @times_url = "#{@base_url}fq=headline.search:(#{$redis.get(:obsession)})&api-key=#{YORK_SEARCH_KEY}"
       begin
@@ -115,7 +122,7 @@ class App < Sinatra::Base
       end
     end
     ### TWITTER ####
-    if $redis.get[:twitter_toggle] == "true"
+    if @twitter_toggle == "true"
       @tweets = []
         TWIT_CLIENT.search("#{$redis.get[:obsession]}", :result_type => "recent").take(20).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
@@ -124,7 +131,7 @@ class App < Sinatra::Base
         end
     end
     ### WEATHER ###
-    if $redis.get[:weather_toggle] == "true"
+    if @weather_toggle == "true"
       @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{$redis.get[:state]}/#{$redis.get[:city]}.json")
       URI.parse(@encoded_url)
       open (@encoded_url) do |f|
@@ -157,14 +164,13 @@ class App < Sinatra::Base
 #    POST     #
 ###############
   post('/feeds') do
-    $redis.set[:obsession] = params[:obsession]
-    $redis.set[:username] = params[:username]
-    $redis.set[:times_toggle] = params[:times_toggle]
-    $redis.set[:twitter_toggle] = params[:twitter_toggle]
-    $redis.set[:graph_toggle] = params[:graph_toggle]
-    $redis.set[:weather_toggle] = params[:weather_toggle]
-    $redis.set[:city] = params[:city]
-    $redis.set[:state] = params[:state]
+    $redis.set(:username, params[:username])
+    @times_toggle = params[:times_toggle]
+    @twitter_toggle = params[:twitter_toggle]
+    @graph_toggle = params[:graph_toggle]
+    @weather_toggle = params[:weather_toggle]
+    $redis.set(:city, params[:city])
+    $redis.set(:state, params[:state])
     redirect to('/feeds')
   end
 
