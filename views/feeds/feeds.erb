@@ -22,12 +22,12 @@
 </section>
 
 <section id="times">
-  <% if @times_toggle == "true" %>
+  <% if @times_toggle %>
     <h1>Relevant News Articles</h1>
     <p>
-      <a href="<%= $redis.get[:times_article_url] %>" ><%= $redis.get[:times_headline] %></a>
+      <a href="<%= $redis.get(:times_article_url) %>" ><%= $redis.get(:times_headline) %></a>
       </br>
-      <%= $redis.get[:times_snippet] %>
+      <%= $redis.get(:times_snippet) %>
       <a href='feeds/times'>The Times</a>
     </p>
   <% end %>

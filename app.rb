@@ -102,7 +102,10 @@ class App < Sinatra::Base
 
   get('/feeds') do
     #### TIMES #####
-    #FIXME
+    @times_toggle   = true # TODO have users set these vars!
+    @twitter_toggle = true
+    @weather_toggle = true
+    @graph_toggle   = true
 
     feeds_hash = JSON.parse($redis.get('feeds_hash'))
 
