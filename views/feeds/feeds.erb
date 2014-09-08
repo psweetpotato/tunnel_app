@@ -2,7 +2,7 @@
 <a href="/logout">Log Out</a>
 
 <section id="twitter">
-  <% if @twitter_toggle == "true" %>
+  <% if @twitter_toggle  %>
   <h1>Tweets</h1>
   <ul>
     <li>  <%=  @tweets[0] %> </li>
@@ -34,10 +34,10 @@
 </section>
 
 <section id="trending">
-  <% if @graph_toggle == "true" %>
-  <h1> <%= $redis.get[:obsession] %> Trending </h1>
+  <% if @graph_toggle %>
+  <h1> <%= $redis.get(:obsession) %> Trending </h1>
     <!-- displays ob$redis graph -->
-    <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=<%= $redis.get[:obsession] %>&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>
+    <script type="text/javascript" src="//www.google.com/trends/embed.js?hl=en-US&q=<%= $redis.get(:obsession) %>&cmpt=q&content=1&cid=TIMESERIES_GRAPH_0&export=5&w=500&h=330"></script>
     </br>
     <a href='/feeds/graph'>Google Trending</a>
   <% end %>
@@ -45,6 +45,6 @@
 
 <section id="weather">
   <% if @weather_toggle == "true" %>
-    <p>Current temperature in <%= $redis.get[:location] %> is: <%= $redis.get[:temp_f] %> </p>
+    <p>Current temperature in <%= $redis.get(:location) %> is: <%= $redis.get(:temp_f) %> </p>
   <% end %>
 </section>

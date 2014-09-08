@@ -1,7 +1,7 @@
 
     <section id="twitter">
-
-  <h1>Tweets Concerning <%= $redis.get[:obsession] %> </h1>
+<!-- #FIXME tweet need to persist -->
+  <h1>Tweets Concerning <%= $redis.get(:obsession) %> </h1>
     <ul>
       <li>  <%= @tweets[0] %> </li>
       <li>  <%= @tweets[1] %> </li>

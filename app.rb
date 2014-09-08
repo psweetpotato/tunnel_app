@@ -125,8 +125,9 @@ class App < Sinatra::Base
     logger.info "end times"
     ### TWITTER ####
     logger.info "beginning twitter"
+    @tweets = []
     if feeds_hash.include?("twitter_toggle")
-      @tweets = []
+      # binding.pry
         TWIT_CLIENT.search("#{$redis.get(:obsession)}", :result_type => "recent").take(20).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
