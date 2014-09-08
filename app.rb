@@ -121,12 +121,13 @@ class App < Sinatra::Base
     ### TWITTER ####
     if session[:twitter_toggle] == "true"
       session[:tweets] = []
-        TWIT_CLIENT.search("#{session[:obsession]}", :result_type => "recent").take(5).each_with_index do |tweet, index|
+        TWIT_CLIENT.search("#{session[:obsession]}", :result_type => "recent").take(20).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
         session[:tweets].push("#{@name} says: '#{@text}'")
         end
     end
+    ### WEATHER ###
     if session[:weather_toggle] == "true"
       @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{session[:state]}/#{session[:city]}.json")
       URI.parse(@encoded_url)

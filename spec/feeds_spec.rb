@@ -12,8 +12,8 @@ describe "Feeds Page" do
     expect(page).to have_css('input[type=checkbox]')
   end
 
-  it 'has 3 feeds' do
-    expect(page).to have_css('section', count: 3 )
+  it 'has at least 3 feeds' do
+    expect(page).to have_css('section', :minimum => 3 )
   end
 
   it 'has a link to the twitter show page' do

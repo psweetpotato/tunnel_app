@@ -1,9 +1,9 @@
 <section id="times">
   <h1>Relevant News Articles</h1>
   <p>
-    <a href="<%= @times_article_url %>" ><%= @times_headline %></a>
+    <a href="<%= session[:times_article_url] %>" ><%= session[:times_headline] %></a>
      </br>
-     <%= @times_snippet %>
+     <%= session[:times_snippet] %>
      <a href='/feeds/times'>The Times</a>
   </p>
 </section>
