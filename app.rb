@@ -39,17 +39,15 @@ class App < Sinatra::Base
   #       API KEYS       #
   ########################
 
-  TWIT_CONSUMER_KEY = "CVTaMkEx6rKwhm5x2hSjRERau"
+  TWIT_CONSUMER_KEY    = "CVTaMkEx6rKwhm5x2hSjRERau"
   TWIT_CONSUMER_SECRET = "xycELG4QVvRPdP1dHMugeXUgmAmODE3CekS7VPD4Jk1MIhDYXf"
-  TWIT_OWNER_ID = "2699174835"
-  TWIT_ACCESS_TOKEN = "2699174835-zejsRftMeSZnTL6MGMW4PvbMoWvuHNh0UeUvgws"
-  TWIT_ACCESS_SECRET = "k2wzFh0LJy4zxaUPdPQhJ5mXkNrGug8jqBk7W2QgXv8CL"
-  WU_KEY = ENV["4dd8a202d9e3383b"]
-  YORK_SEARCH_KEY = "89b8034ef450f0c931fa447d7dca0d8d:1:69766109"
-  INSTA_CLIENT_KEY= "64116f06f3ae4b13abb5a26e2fc84a43"
-  INSTA_CLIENT_SECRET = "507673b069c64e04a16f2d4078311e16"
-
-
+  TWIT_OWNER_ID        = "2699174835"
+  TWIT_ACCESS_TOKEN    = "2699174835-zejsRftMeSZnTL6MGMW4PvbMoWvuHNh0UeUvgws"
+  TWIT_ACCESS_SECRET   = "k2wzFh0LJy4zxaUPdPQhJ5mXkNrGug8jqBk7W2QgXv8CL"
+  WU_KEY               = ENV["4dd8a202d9e3383b"]
+  YORK_SEARCH_KEY      = "89b8034ef450f0c931fa447d7dca0d8d:1:69766109"
+  INSTA_CLIENT_KEY     = "64116f06f3ae4b13abb5a26e2fc84a43"
+  INSTA_CLIENT_SECRET  = "507673b069c64e04a16f2d4078311e16"
 
   ########################
   #    Client Set Up     #
@@ -160,9 +158,10 @@ class App < Sinatra::Base
     #TODO
     redirect to ('/profile/logout')
   end
-###############
-#    POST     #
-###############
+
+  ###############
+  #    POST     #
+  ###############
   post('/feeds') do
     $redis.set(:username, params[:username])
     @times_toggle = params[:times_toggle]
