@@ -112,7 +112,6 @@ class App < Sinatra::Base
     logger.info "beginning times"
     if feeds_hash.include?("times_toggle")
       @base_url  = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-      # binding.pry
       @times_url = "#{@base_url}fq=headline.search:(#{$redis.get(:obsession)})&api-key=#{YORK_SEARCH_KEY}"
       begin
         times_response = HTTParty.get("#{@times_url}").to_json
