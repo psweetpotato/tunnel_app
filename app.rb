@@ -145,19 +145,19 @@ class App < Sinatra::Base
       end
     end
     logger.info "end weather"
-    render(:erb, :'/Feeds/feeds')
+    render(:erb, :'feeds/feeds')
   end
 
   get('/feeds/twitter') do
-    render(:erb, :'/Feeds/feed_twitter')
+    render(:erb, :'feeds/feed_twitter')
   end
 
   get('/feeds/times') do
-    render(:erb, :'/Feeds/feed_times')
+    render(:erb, :'feeds/feed_times')
   end
 
   get('/feeds/graph') do
-    render(:erb, :'/Feeds/feed_graph')
+    render(:erb, :'feeds/feed_graph')
   end
 
   get('/logout') do
