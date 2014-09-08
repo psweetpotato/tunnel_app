@@ -8,7 +8,7 @@ describe "Feeds Page" do
   end
 
   it 'has a link to the profile edit page' do
-    find_link('Profile').click
+    find_link('Edit Profile').click
     expect(page).to have_css('input[type=checkbox]')
   end
 

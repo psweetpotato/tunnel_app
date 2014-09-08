@@ -95,6 +95,11 @@ class App < Sinatra::Base
     render(:erb, :edit)
   end
 
+  get('/profile/logout') do
+    @logged_out = true
+    render(:erb, :profile)
+  end
+
   get('/feeds/id') do
     @feed_index = params[:id]
     render(:erb, :feed_id)
@@ -102,7 +107,10 @@ class App < Sinatra::Base
 
   get('/feeds') do
     if params[:obsession]
-    session[:obsession] = params[:obsession].capitalize
+      session[:obsession] = params[:obsession].capitalize
+    end
+    if params[:username]
+      session[:username] = params[:username]
     end
     # FIXME hardcoded until peristing data works
     #### TIMES #####
@@ -153,6 +161,11 @@ class App < Sinatra::Base
     render(:erb, :'/Feeds/feed_graph')
   end
 
+  get '/logout' do
+    old_user = session[:username]
+    session[:username] = nil
+    redirect to ('profile/logout')
+    end
 ###############
 #    POST     #
 ###############

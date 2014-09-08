@@ -2,15 +2,17 @@
 
 <% if @obscure %>
 <h1>Congratulations! You are too cool for school! (Your obsession is too obscure. Try again.) </h1>
+<% elsif @logged_out %>
+<h1> Log Out Successful! </h1>
 <% else %>
 <h1> Hello! </h1>
 <% end %>
 
 <section id="form">
   <form method="get" action="/feeds">
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username" />
     <label for="obsession">Pick your obsession.</label>
     <input type="text" name="obsession" id="obsession" />
     <input type="submit" id="submit"/>
-  </form>
-
 </section>
