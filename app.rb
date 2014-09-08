@@ -70,6 +70,7 @@ class App < Sinatra::Base
                   :graph_toggle => "true",
                   }
     $redis.set(:feeds_hash, feeds_hash.to_json)
+    # binding.pry
   end
 
   get('/') do
@@ -103,11 +104,13 @@ class App < Sinatra::Base
     #### TIMES #####
     #FIXME
     @feeds = []
-    $redis.keys('*toggle*').each do |key|
-      @feeds << key
+    $redis.keys('*feed*').each do |key|
+      key.each do |toggle|
+      @feeds << toggle
+      end
     end
-    if @feeds.include?(:times_toggle) == "true"
-      binding.pry
+    # binding.pry
+    if @feeds.include?(:times_toggle)
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
       @times_url = "#{@base_url}fq=headline.search:(#{$redis.get(:obsession)})&api-key=#{YORK_SEARCH_KEY}"
       begin
@@ -120,16 +123,16 @@ class App < Sinatra::Base
       end
     end
     ### TWITTER ####
-    if @feeds.include?(:twitter_toggle) == "true"
+    if @feeds.include?(:twitter_toggle)
       @tweets = []
-        TWIT_CLIENT.search("#{$redis.get[:obsession]}", :result_type => "recent").take(20).each_with_index do |tweet, index|
+        TWIT_CLIENT.search("#{$redis.get(:obsession)}", :result_type => "recent").take(20).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
         @tweets.push("#{@name} says: '#{@text}'")
         end
     end
     ### WEATHER ###
-    if @feeds.include?(:weather_toggle) == "true"
+    if @feeds.include?(:weather_toggle)
       @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{$redis.get[:state]}/#{$redis.get[:city]}.json")
       URI.parse(@encoded_url)
       open (@encoded_url) do |f|
