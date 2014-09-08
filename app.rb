@@ -116,11 +116,11 @@ class App < Sinatra::Base
     end
     ### TWITTER ####
     if $redis.get[:twitter_toggle] == "true"
-      $redis.set[:tweets] = []
+      @tweets = []
         TWIT_CLIENT.search("#{$redis.get[:obsession]}", :result_type => "recent").take(20).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
-        # $redis.set[:tweets].push("#{@name} says: '#{@text}'")
+        @tweets.push("#{@name} says: '#{@text}'")
         end
     end
     ### WEATHER ###
@@ -168,28 +168,4 @@ class App < Sinatra::Base
     redirect to('/feeds')
   end
 
-    ######### INSTA #######
-    # CALLBACK_URL = "http://127.0.0.1:9292/callback_uri"
-
-    # Instagram.configure do |config|
-    #   config.client_id = INSTA_CLIENT_KEY
-    #   config.client_secret = INSTA_CLIENT_SECRET
-    # end
-
-
-  # get('/callback_uri') do
-  #   hub_challenge_param = "15f7d1a91c1f40f8a748fd134752feb3"
-  # end
-
-  # post('/insta') do
-  #   curl -F 'client_id=#{INSTA_CLIENT_KEY}' \
-  #    -F 'client_secret=#{INSTA_CLIENT_SECRET}' \
-  #    -F 'object=tag' \
-  #    -F 'aspect=media' \
-  #    -F 'verify_token=myVerifyToken' \
-  #    -F 'object_id=#{@ob$redis}' \
-  #    -F 'callback_url=http://127.0.0.1:9292/callback_uri' \
-  #    https://api.instagram.com/v1/subscriptions/
-
-  # end
 end

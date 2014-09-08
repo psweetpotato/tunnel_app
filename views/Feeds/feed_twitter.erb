@@ -1,17 +1,17 @@
 
     <section id="twitter">
 
-  <h1>Tweets Concerning <%= $redis[:obsession] %> </h1>
+  <h1>Tweets Concerning <%= $redis.get[:obsession] %> </h1>
     <ul>
-      <li>  <%= $redis[:tweets][0] %> </li>
-      <li>  <%= $redis[:tweets][1] %> </li>
-      <li>  <%= $redis[:tweets][2] %> </li>
-      <li>  <%= $redis[:tweets][3] %> </li>
-      <li>  <%= $redis[:tweets][4] %> </li>
-      <li>  <%= $redis[:tweets][5] %> </li>
-      <li>  <%= $redis[:tweets][6] %> </li>
-      <li>  <%= $redis[:tweets][7] %> </li>
-      <li>  <%= $redis[:tweets][8] %> </li>
-      <li>  <%= $redis[:tweets][9] %> </li>
+      <li>  <%= @tweets[0] %> </li>
+      <li>  <%= @tweets[1] %> </li>
+      <li>  <%= @tweets[2] %> </li>
+      <li>  <%= @tweets[3] %> </li>
+      <li>  <%= @tweets[4] %> </li>
+      <li>  <%= @tweets[5] %> </li>
+      <li>  <%= @tweets[6] %> </li>
+      <li>  <%= @tweets[7] %> </li>
+      <li>  <%= @tweets[8] %> </li>
+      <li>  <%= @tweets[9] %> </li>
     </ul>
     </section>
