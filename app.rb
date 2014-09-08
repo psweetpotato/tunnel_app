@@ -108,7 +108,7 @@ class App < Sinatra::Base
     #### TIMES #####
     if session[:times_toggle] == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-      @times_url = "#{@base_url}fq=#{session[:obsession]}&api-key=#{YORK_SEARCH_KEY}"
+      @times_url = "#{@base_url}fq=headline.search:(#{session[:obsession]})&api-key=#{YORK_SEARCH_KEY}"
       begin
         times_response = HTTParty.get("#{@times_url}").to_json
         session[:times_article_url] = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
