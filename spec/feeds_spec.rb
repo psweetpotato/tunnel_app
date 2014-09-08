@@ -3,7 +3,7 @@ require 'pry'
 describe "Feeds Page" do
   before(:each) do
     visit '/profile'
-    fill_in 'obsession', with: 'test'
+    fill_in 'ob$redis', with: 'test'
     click_button 'submit'
   end
 

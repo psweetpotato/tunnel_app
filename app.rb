@@ -1,4 +1,4 @@
-require 'sinatra/base'
+require 'sinatra'
 require 'securerandom'
 require 'httparty'
 require 'instagram'
@@ -8,7 +8,6 @@ require 'redis'
 require 'json'
 require 'pry'
 require 'uri'
-
 
 class App < Sinatra::Base
 
@@ -66,16 +65,11 @@ class App < Sinatra::Base
   ########################
   # Routes
   ########################
-  before('/profile') do
-    params = {:twitter_toggle => "true",
-              :times_toggle => "true",
-              :graph_toggle => "true",
-              :weather_toggle => false
-            }
-    session[:twitter_toggle] = params[:twitter_toggle]
-    session[:times_toggle] = params[:times_toggle]
-    session[:graph_toggle] = params[:graph_toggle]
-    session[:weather_toggle] = params[:weather_toggle]
+  before ('/profile') do
+      $redis.set[:twitter_toggle] = "true"
+      $redis.set[:times_toggle] = "true"
+      $redis.set[:graph_toggle] = "true"
+      $redis.set[:weather_toggle] = false
   end
 
   get('/') do
@@ -106,44 +100,38 @@ class App < Sinatra::Base
   end
 
   get('/feeds') do
-    if params[:obsession]
-      session[:obsession] = params[:obsession].capitalize
-    end
-    if params[:username]
-      session[:username] = params[:username]
-    end
-    # FIXME hardcoded until peristing data works
     #### TIMES #####
-    if session[:times_toggle] == "true"
+    binding.pry
+    if  $redis.get(:times_toggle) == "true"
       @base_url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?"
-      @times_url = "#{@base_url}fq=headline.search:(#{session[:obsession]})&api-key=#{YORK_SEARCH_KEY}"
+      @times_url = "#{@base_url}fq=headline.search:(#{$redis.get(:obsession)})&api-key=#{YORK_SEARCH_KEY}"
       begin
         times_response = HTTParty.get("#{@times_url}").to_json
-        session[:times_article_url] = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
-        session[:times_snippet] = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
-        session[:times_headline] = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
+        $redis.set[:times_article_url] = JSON.parse(times_response)["response"]["docs"][0]["web_url"]
+        $redis.set[:times_snippet] = JSON.parse(times_response)["response"]["docs"][0]["snippet"]
+        $redis.set[:times_headline] = JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"]
       rescue
         redirect to('/profile/retry')
       end
     end
     ### TWITTER ####
-    if session[:twitter_toggle] == "true"
-      session[:tweets] = []
-        TWIT_CLIENT.search("#{session[:obsession]}", :result_type => "recent").take(20).each_with_index do |tweet, index|
+    if $redis.get[:twitter_toggle] == "true"
+      $redis.set[:tweets] = []
+        TWIT_CLIENT.search("#{$redis.get[:obsession]}", :result_type => "recent").take(20).each_with_index do |tweet, index|
         @name = tweet.user.screen_name
         @text = tweet.text
-        session[:tweets].push("#{@name} says: '#{@text}'")
+        # $redis.set[:tweets].push("#{@name} says: '#{@text}'")
         end
     end
     ### WEATHER ###
-    if session[:weather_toggle] == "true"
-      @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{session[:state]}/#{session[:city]}.json")
+    if $redis.get[:weather_toggle] == "true"
+      @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{$redis.get[:state]}/#{$redis.get[:city]}.json")
       URI.parse(@encoded_url)
       open (@encoded_url) do |f|
       weather_string = f.read
       weather_parsed = JSON.parse(weather_string)
-      session[:location] = weather_parsed['current_observation']['display_location']['full']
-      session[:temp_f] = weather_parsed['current_observation']['temp_f']
+      $redis.set[:location] = weather_parsed['current_observation']['display_location']['full']
+      $redis.set[:temp_f] = weather_parsed['current_observation']['temp_f']
       end
     end
     render(:erb, :'/Feeds/feeds')
@@ -161,38 +149,22 @@ class App < Sinatra::Base
     render(:erb, :'/Feeds/feed_graph')
   end
 
-  get '/logout' do
-    old_user = session[:username]
-    session[:username] = nil
-    redirect to ('profile/logout')
+  get('/logout') do
+    #TODO
+    redirect to ('/profile/logout')
     end
 ###############
 #    POST     #
 ###############
   post('/feeds') do
-    if params[:twitter_toggle] == nil
-      session[:twitter_toggle] = false
-    else
-      session[:twitter_toggle] = "true"
-    end
-    if params[:times_toggle] == nil
-      session[:times_toggle] = false
-    else
-      session[:times_toggle] = "true"
-    end
-    if params[:graph_toggle] == nil
-      session[:graph_toggle] = false
-    else
-      session[:graph_toggle] = "true"
-    end
-    if params[:weather_toggle] == nil
-      session[:weather_toggle] = false
-    else
-      session[:weather_toggle] = "true"
-    end
-
-    session[:city] = params[:city]
-    session[:state] = params[:state]
+    $redis.set[:obsession] = params[:obsession]
+    $redis.set[:username] = params[:username]
+    $redis.set[:times_toggle] = params[:times_toggle]
+    $redis.set[:twitter_toggle] = params[:twitter_toggle]
+    $redis.set[:graph_toggle] = params[:graph_toggle]
+    $redis.set[:weather_toggle] = params[:weather_toggle]
+    $redis.set[:city] = params[:city]
+    $redis.set[:state] = params[:state]
     redirect to('/feeds')
   end
 
@@ -215,7 +187,7 @@ class App < Sinatra::Base
   #    -F 'object=tag' \
   #    -F 'aspect=media' \
   #    -F 'verify_token=myVerifyToken' \
-  #    -F 'object_id=#{@obsession}' \
+  #    -F 'object_id=#{@ob$redis}' \
   #    -F 'callback_url=http://127.0.0.1:9292/callback_uri' \
   #    https://api.instagram.com/v1/subscriptions/
 
