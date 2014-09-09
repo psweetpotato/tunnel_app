@@ -26,19 +26,32 @@
     <% end %>
     <h1>Which feeds would you like to see?</h1>
     <label for="twitter_toggle">Twitter</label>
+    <% if $redis.exists(:twitter_toggle) %>
       <input type="checkbox" name="twitter_toggle" id="twitter_toggle" value=true checked />
+    <% else %>
+      <input type="checkbox" name="twitter_toggle" id="twitter_toggle" value=true />
+    <% end %>
     </br></br>
-
       <label for="times_toggle">New York Times</label>
+    <% if $redis.exists(:times_toggle) %>
       <input type="checkbox" name="times_toggle" id="times_toggle" value=true checked/>
+    <% else %>
+    <input type="checkbox" name="times_toggle" id="times_toggle" value=true />
+    <% end %>
     </br></br>
-
       <label for="graph_toggle">Google Trending</label>
+    <% if $redis.exists(:graph_toggle) %>
       <input type="checkbox" name="graph_toggle" id="graph_toggle" value=true checked/>
+    <% else %>
+      <input type="checkbox" name="graph_toggle" id="graph_toggle" value=true />
+    <% end %>
     </br></br>
-
     <label for="weather_toggle">Weather</label>
-    <input type="checkbox" name="weather_toggle" id="weather_toggle" value=true />
+    <% if $redis.exists(:weather_toggle) %>
+      <input type="checkbox" name="weather_toggle" id="weather_toggle" value=true checked/>
+    <% else %>
+      <input type="checkbox" name="weather_toggle" id="weather_toggle" value=true />
+    <% end %>
     </br></br>
 
     <label for="city">City</label>

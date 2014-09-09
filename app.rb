@@ -151,7 +151,7 @@ class App < Sinatra::Base
   end
 
   get('/logout') do
-    #TODO
+    # $redis.flushdb
     redirect to ('/profile/logout')
   end
 
@@ -165,15 +165,23 @@ class App < Sinatra::Base
     $redis.set(:state, params[:state])
     if params["twitter_toggle"]
       $redis.set(:twitter_toggle, params["twitter_toggle"])
+    else
+      $redis.del("twitter_toggle")
     end
     if params["times_toggle"]
       $redis.set(:times_toggle, params["times_toggle"])
+    else
+      $redis.del("times_toggle")
     end
     if params["weather_toggle"]
       $redis.set(:weather_toggle, params["weather_toggle"])
+    else
+      $redis.del("weather_toggle")
     end
     if params["graph_toggle"]
       $redis.set(:graph_toggle, params["graph_toggle"])
+    else
+      $redis.del("graph_toggle")
     end
     redirect to('/feeds')
   end
