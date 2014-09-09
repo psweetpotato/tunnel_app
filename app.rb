@@ -152,6 +152,12 @@ class App < Sinatra::Base
   end
 
   get('/feeds/twitter') do
+    @tweets = []
+    TWIT_CLIENT.search("#{$redis.get(:obsession)}", :result_type => "recent").take(20).each_with_index do |tweet, index|
+        @name = tweet.user.screen_name
+        @text = tweet.text
+        @tweets.push("#{@name} says: '#{@text}'")
+        end
     render(:erb, :'feeds/feed_twitter')
   end
 
@@ -173,13 +179,29 @@ class App < Sinatra::Base
   ###############
   post('/feeds') do
     $redis.set(:username, params[:username])
-    @times_toggle = params[:times_toggle]
-    @twitter_toggle = params[:twitter_toggle]
-    @graph_toggle = params[:graph_toggle]
-    @weather_toggle = params[:weather_toggle]
+    feeds_hash = JSON.parse($redis.get('feeds_hash'))
+
+    if params[:times_toggle]
+      $redis.rpush(:feeds_hash, :times_toggle => "true")
+    else
+      $redis.srem(:feeds_hash, :times_toggle => "true")
+    end
+    if params[:twitter_toggle]
+      @twitter_toggle = params[:twitter_toggle]
+    end
+    if params[:graph_toggle]
+      @graph_toggle = params[:graph_toggle]
+    end
+    if params[:weather_toggle]
+      @weather_toggle = params[:weather_toggle]
+    end
+    binding.pry
     $redis.set(:city, params[:city])
     $redis.set(:state, params[:state])
-    $redis.set(:obsession, params[:obsession])
+    if params[:obsession]
+      $redis.set(:obsession, params[:obsession])
+    end
+    $redis.set(:feeds_hash, feeds_hash.to_json)
     redirect to('/feeds')
   end
 
