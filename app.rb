@@ -69,7 +69,7 @@ class App < Sinatra::Base
   end
 
   get('/profile') do
-    $redis.flushdb
+    # $redis.flushdb
     render(:erb, :profile)
   end
 
@@ -79,17 +79,13 @@ class App < Sinatra::Base
   end
 
   get('/profile/edit') do
+    @edit = true
     render(:erb, :profile)
   end
 
   get('/profile/logout') do
     @logged_out = true
     render(:erb, :profile)
-  end
-
-  get('/feeds/id') do
-    @feed_index = params[:id]
-    render(:erb, :feed_id)
   end
 
   get('/feeds') do
