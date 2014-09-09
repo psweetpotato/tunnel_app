@@ -2,10 +2,8 @@
 
 <% if @obscure %>
 <h1>Congratulations! You are too cool for school! (Your obsession is too obscure. Try again.) </h1>
-<% elsif @logged_out %>
-<h1> Log Out Successful! </h1>
 <% elsif @edit %>
-<h1> Hello <%= $redis.get(:username) %>, your obsession is <%= $redis.get(:obsession) %> </h1>
+<h1> Hello <%= $redis.get(:username).capitalize %>, your obsession is <%= $redis.get(:obsession).capitalize %>. </h1>
 <% else %>
 <h1> Hello! </h1>
 <% end %>
@@ -58,6 +56,8 @@
     <input type="text" name="city" id="city" />
     <label for="state">State</label>
     <input type="text" name="state" id="state" />
+  </br></br>
     <input type="submit" id="submit" />
   </form>
 </section>
+

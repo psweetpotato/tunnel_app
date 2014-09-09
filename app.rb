@@ -68,8 +68,12 @@ class App < Sinatra::Base
     redirect to('/profile')
   end
 
+  get('/profile/new') do
+    $redis.flushdb
+    render(:erb, :profile)
+  end
+
   get('/profile') do
-    # $redis.flushdb
     render(:erb, :profile)
   end
 
@@ -80,11 +84,6 @@ class App < Sinatra::Base
 
   get('/profile/edit') do
     @edit = true
-    render(:erb, :profile)
-  end
-
-  get('/profile/logout') do
-    @logged_out = true
     render(:erb, :profile)
   end
 
