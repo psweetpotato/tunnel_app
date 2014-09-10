@@ -4,9 +4,9 @@
 
 ## Overview
 
-##### TunnelVision is a dashboard application that allows a user to search multiple feeds and sources for one specific keyword or obsession. It also allows the user to control which feeds will be displayed on the dashboard.
+TunnelVision is a dashboard application that allows a user to search multiple feeds and sources for one specific keyword or obsession. It also allows the user to control which feeds will be displayed on the dashboard.
 
-##### TunnelVision was first application developed by Sarah McDonald during the Web Development Immersive course at General Assembly. This initial project was completed during a 4 day sprint but will continue to be worked on over.
+TunnelVision was first application developed by Sarah McDonald during the Web Development Immersive course at General Assembly. This initial project was completed during a 4 day sprint but will continue to be worked on over.
 
 ## Technologies Used
   <ul>
