@@ -5,7 +5,7 @@ h1 {
   text-align: center;
   color: #E3E3E3;
 }
-#form {
+.form {
   text-align: center;
   color: #E3E3E3;
 }
@@ -37,4 +37,9 @@ body {
 #trending {
   text-align: center;
   background-color: rgba(161 160 163 .7);
+}
+#profile {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
