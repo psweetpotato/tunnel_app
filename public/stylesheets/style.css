@@ -1,4 +1,6 @@
-
+ <p>.hole
+  - (1..10).each do
+    %i</p>
 $particles: 10; // has to match nodes in dom
 $particleSize: 140px;
 $lapDuration: 3s;
