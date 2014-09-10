@@ -4,7 +4,7 @@
 </br></br></br>
 
 <section id="twitter">
-  <div id="twit">
+  <div class="twit">
   <% if $redis.exists("twitter_toggle")  %>
   <h1>Tweets</h1>
   </br>
@@ -50,7 +50,7 @@
 </br></br></br>
 
 <section id="trending">
-  <div id="trend"
+  <div class="trend"
   <% if $redis.exists("graph_toggle") %>
   <h1> <%= $redis.get(:obsession).capitalize %> Trending </h1>
 </br>

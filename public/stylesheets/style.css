@@ -32,6 +32,14 @@ body {
   text-align: center;
   background-color: rgba(161 160 163 .7);
 }
-#trend {
+.trend {
   border: 3px;
+  background-color: rgba(161 160 163 .7);
+}
+.twit {
+  width: 320px;
+  padding: 10px;
+  border: 5px solid gray;
+  margin: 0;
+  background-color: rgba(161 160 163 .7);
 }
