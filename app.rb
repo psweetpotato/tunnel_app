@@ -6,7 +6,7 @@ require 'twitter'
 require 'open-uri'
 require 'redis'
 require 'json'
-require 'pry'
+require 'pry' if ENV["RACK_ENV"] == "development"
 require 'uri'
 
 class App < Sinatra::Base
