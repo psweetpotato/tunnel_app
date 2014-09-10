@@ -5,17 +5,9 @@ h1 {
   text-align: center;
   color: #E3E3E3;
 }
-form {
+#form {
   text-align: center;
-}
-section {
-  text-align: center;
-}
-a {
-  color: #E3E3E3;
-}
-p {
-  color: #E3E3E3;
+  color: #E3E3E3
 }
 
 }
@@ -25,6 +17,18 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+#times {
+  text-align: center;
+  color: #E3E3E3
+}
+#twitter {
+  text-align: center;
+  color: #E3E3E3
+}
+#weather {
+  text-align: center;
+  color: #E3E3E3
 }
 #trending {
   background: rgba(161 160 163 .7);
