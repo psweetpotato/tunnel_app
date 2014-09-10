@@ -7,9 +7,7 @@ h1 {
 }
 #form {
   text-align: center;
-  color: #E3E3E3
-}
-
+  color: #E3E3E3;
 }
 body {
   background: url(http://i.imgur.com/uUWkNRX.jpg) no-repeat center center fixed;
@@ -33,4 +31,7 @@ body {
 #trending {
   text-align: center;
   background-color: rgba(161 160 163 .7);
+}
+#trend {
+  border: 3px;
 }
