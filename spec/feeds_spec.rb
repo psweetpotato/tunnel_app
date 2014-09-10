@@ -1,4 +1,4 @@
-require 'pry'
+require 'pry' if ENV['RACK_ENV'] == "development"
 
 describe "Feeds Page" do
   before(:each) do
