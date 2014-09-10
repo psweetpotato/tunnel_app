@@ -11,7 +11,7 @@
 </br>
 
 <section id="form">
-  <p>
+
   <form method="post" action="/feeds">
     <% if @edit %>
     <input type="hidden" name="username" id="username" value="<%= $redis.get("username") %>" />
@@ -23,7 +23,7 @@
     <label for="obsession">Pick your obsession.</label>
     <input type="text" name="obsession" id="obsession" />
     <% end %>
-</p>
+
     </br></br>
 
     <h1>Which feeds would you like to see?</h1>
