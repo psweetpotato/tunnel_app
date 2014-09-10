@@ -1,6 +1,44 @@
 .hole
   - (1..10).each do
     %i
+$particles: 10; // has to match nodes in dom
+$particleSize: 140px;
+$lapDuration: 3s;
+$shadowColor: #ffffff;
+
+html, body {
+  overflow: hidden;
+  background: #111;
+}
+
+.hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+}
+
+i {
+  display: block;
+  position: absolute;
+  width: $particleSize;
+  height: $particleSize;
+  left: -$particleSize/2;
+  top: -$particleSize/2;
+  border-radius: $particleSize;
+  opacity: 0;
+
+ animation-name: scale;
+  animation-duration: $lapDuration;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  //animation-direction: alternate;
+}
+
+@for $i from 1 through $particles {
+  i:nth-child(#{$i}) {
+    animation-delay: $i * ($lapDuration / $particles);
+  }
 }
 
 @keyframes scale {
