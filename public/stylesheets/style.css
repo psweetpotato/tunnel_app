@@ -1,4 +1,9 @@
 h1 {
   font-family: 'IM Fell English', serif;
-  font-weight: 300;
+  font-weight: 900;
+  font-size: x-large;
+  text-align: center;
+}
+form {
+  text-align: center;
 }
