@@ -1,5 +1,5 @@
 
-<section id="profile">
+<div class="profile">
 <% if @obscure %>
 <h1>Congratulations! You are too cool for school! (Your obsession is too obscure. Try again.) </h1>
 <% elsif @edit %>
@@ -10,7 +10,7 @@
 
 </br>
 
-<div class="form">
+<section id="form">
 
   <form method="post" action="/feeds">
     <% if @edit %>
@@ -66,5 +66,5 @@
     <input type="submit" id="submit" />
 
   </form>
-</div>
 </section>
+</div>
