@@ -14,6 +14,9 @@ section {
 p {
   color: #E3E3E3;
 }
+a {
+  color: #E3E3E3;
+}
 body {
   background: url(http://i.imgur.com/uUWkNRX.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
