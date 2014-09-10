@@ -9,6 +9,12 @@ h1 {
   text-align: center;
   color: #E3E3E3;
 }
+a:link {
+  color: #8B8C89;
+}
+a:visited {
+  color: #8B8C89;
+}
 body {
   background: url(http://i.imgur.com/B3DUhCm.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
