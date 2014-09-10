@@ -15,6 +15,9 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header>
+    <%= render(:erb, :_header) %>
+    </header>
+        <%= yield %>
   </body>
 </html>
