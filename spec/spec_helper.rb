@@ -10,3 +10,4 @@ Capybara.app_host = 'http://127.0.0.1:9292'
 RSpec.configure do |config|
   config.include Capybara::DSL
 end
+

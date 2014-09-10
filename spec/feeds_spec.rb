@@ -35,6 +35,4 @@ describe "Feeds Page" do
     expect(page).to have_content('test')
   end
 
-
-
 end

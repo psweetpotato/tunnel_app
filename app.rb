@@ -98,6 +98,12 @@ class App < Sinatra::Base
         $redis.set(:times_article_url, JSON.parse(times_response)["response"]["docs"][0]["web_url"])
         $redis.set(:times_snippet,     JSON.parse(times_response)["response"]["docs"][0]["snippet"])
         $redis.set(:times_headline,    JSON.parse(times_response)["response"]["docs"][0]["headline"]["main"])
+        $redis.set(:times_article_url_1, JSON.parse(times_response)["response"]["docs"][1]["web_url"])
+        $redis.set(:times_snippet_1,     JSON.parse(times_response)["response"]["docs"][1]["snippet"])
+        $redis.set(:times_headline_1,    JSON.parse(times_response)["response"]["docs"][1]["headline"]["main"])
+        $redis.set(:times_article_url_2, JSON.parse(times_response)["response"]["docs"][2]["web_url"])
+        $redis.set(:times_snippet_2,     JSON.parse(times_response)["response"]["docs"][2]["snippet"])
+        $redis.set(:times_headline_2,    JSON.parse(times_response)["response"]["docs"][2]["headline"]["main"])
       rescue
         redirect to('/profile/retry')
       end
@@ -107,24 +113,23 @@ class App < Sinatra::Base
     logger.info "beginning twitter"
     @tweets = []
     if $redis.exists("twitter_toggle")
-      # binding.pry
-        TWIT_CLIENT.search("#{$redis.get(:obsession)}", :result_type => "recent").take(20).each_with_index do |tweet, index|
-        @name = tweet.user.screen_name
-        @text = tweet.text
-        @tweets.push("#{@name} says: '#{@text}'")
-        end
+      TWIT_CLIENT.search("#{$redis.get(:obsession)}", :result_type => "recent").take(20).each_with_index do |tweet, index|
+      @name = tweet.user.screen_name
+      @text = tweet.text
+      @tweets.push("#{@name} says: '#{@text}'")
+      end
     end
     logger.info "end twitter"
     ### WEATHER ###
     logger.info "beginning weather"
     if $redis.exists("weather_toggle")
-      @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{$redis.get[:state]}/#{$redis.get[:city]}.json")
+      @encoded_url = URI.encode("http://api.wunderground.com/api/4dd8a202d9e3383b/conditions/q/#{$redis.get(:state)}/#{$redis.get(:city)}.json")
       URI.parse(@encoded_url)
       open (@encoded_url) do |f|
       weather_string = f.read
       weather_parsed = JSON.parse(weather_string)
-      $redis.set[:location] = weather_parsed['current_observation']['display_location']['full']
-      $redis.set[:temp_f] = weather_parsed['current_observation']['temp_f']
+      $redis.set(:location, weather_parsed['current_observation']['display_location']['full'])
+      $redis.set(:temp_f, weather_parsed['current_observation']['temp_f'])
       end
     end
     logger.info "end weather"
@@ -134,10 +139,10 @@ class App < Sinatra::Base
   get('/feeds/twitter') do
     @tweets = []
     TWIT_CLIENT.search("#{$redis.get(:obsession)}", :result_type => "recent").take(20).each_with_index do |tweet, index|
-        @name = tweet.user.screen_name
-        @text = tweet.text
-        @tweets.push("#{@name} says: '#{@text}'")
-        end
+      @name = tweet.user.screen_name
+      @text = tweet.text
+      @tweets.push("#{@name} says: '#{@text}'")
+      end
     render(:erb, :'feeds/feed_twitter')
   end
 
